@@ -1,0 +1,9 @@
+/home/max/dev/game-backend/player-service/obj/Debug/net10.0/player-service.csproj.AssemblyReference.cache
+/home/max/dev/game-backend/player-service/obj/Debug/net10.0/rpswa.dswa.cache.json
+/home/max/dev/game-backend/player-service/obj/Debug/net10.0/player-service.GeneratedMSBuildEditorConfig.editorconfig
+/home/max/dev/game-backend/player-service/obj/Debug/net10.0/player-service.AssemblyInfoInputs.cache
+/home/max/dev/game-backend/player-service/obj/Debug/net10.0/player-service.AssemblyInfo.cs
+/home/max/dev/game-backend/player-service/obj/Debug/net10.0/player-service.csproj.CoreCompileInputs.cache
+/home/max/dev/game-backend/player-service/obj/Debug/net10.0/player-service.MvcApplicationPartsAssemblyInfo.cs
+/home/max/dev/game-backend/player-service/obj/Debug/net10.0/player-service.MvcApplicationPartsAssemblyInfo.cache
+/home/max/dev/game-backend/player-service/obj/Debug/net10.0/player-service.sourcelink.json
