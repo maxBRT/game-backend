@@ -33,6 +33,15 @@ public class AppDbContext : DbContext
             .HasOne(i => i.Item)
             .WithMany(i => i.Inventories)
             .HasForeignKey(i => i.ItemId);
+
+        // Seed data
+        modelBuilder.Entity<Player>().HasData(
+            new Player { Id = 1, Username = "Max", Level = 1, Experience = 0, Currency = 100 },
+            new Player { Id = 2, Username = "John", Level = 1, Experience = 0, Currency = 100 },
+            new Player { Id = 3, Username = "Jane", Level = 1, Experience = 0, Currency = 100 },
+            new Player { Id = 4, Username = "Bob", Level = 1, Experience = 0, Currency = 100 },
+            new Player { Id = 5, Username = "Alice", Level = 1, Experience = 0, Currency = 100 }
+        );
     }
 }
 
