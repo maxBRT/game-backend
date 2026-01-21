@@ -42,6 +42,12 @@ public class AppDbContext : DbContext
             new Player { Id = 4, Username = "Bob", Level = 1, Experience = 0, Currency = 100 },
             new Player { Id = 5, Username = "Alice", Level = 1, Experience = 0, Currency = 100 }
         );
+
+        modelBuilder.Entity<Item>().HasData(
+            new Item { Id = 1, Name = "Sword", Price = 20 },
+            new Item { Id = 2, Name = "Boots", Price = 5 },
+            new Item { Id = 3, Name = "Shield", Price = 10 }
+        );
     }
 }
 

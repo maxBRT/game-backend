@@ -7,6 +7,7 @@ public class PlayerService(AppDbContext db) : IPlayerService
 
     public async Task<Player?> GetPlayer(int id)
     {
-        return await _db.Players.FindAsync(id);
+        var player = await _db.Players.FindAsync(id);
+        return player ?? throw new PlayerNotFoundException("Player not found");
     }
 }

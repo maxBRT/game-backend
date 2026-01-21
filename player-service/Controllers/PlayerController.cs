@@ -8,15 +8,20 @@ public class PlayerController(IPlayerService playerService)
     private readonly IPlayerService _playerService = playerService;
 
     [HttpGet("players/{id}")]
-    public async Task<Results<Ok<Player>, NotFound>> GetPlayer(int id)
+    public async Task<Results<Ok<Player>, NotFound, InternalServerError>> GetPlayer(int id)
     {
-        var player = await _playerService.GetPlayer(id);
-
-        if (player == null)
+        try
         {
-            return TypedResults.NotFound();
+            var player = await _playerService.GetPlayer(id);
+            return TypedResults.Ok(player);
         }
-
-        return TypedResults.Ok(player);
+        catch (Exception e)
+        {
+            return e switch
+            {
+                PlayerNotFoundException => TypedResults.NotFound(),
+                _ => TypedResults.InternalServerError(),
+            };
+        }
     }
 }
