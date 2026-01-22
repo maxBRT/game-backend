@@ -1,4 +1,5 @@
 using player_service.Data;
+using player_service.Services;
 using Scalar.AspNetCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -9,9 +10,18 @@ builder.Services.AddOpenApi();
 builder.Services.AddDbContext<AppDbContext>();
 builder.Services.AddScoped<IPlayerService, PlayerService>();
 builder.Services.AddScoped<IStoreService, StoreService>();
+builder.Services.AddScoped<SeedingService>();
 builder.Services.AddControllers();
 
 var app = builder.Build();
+
+using var scope = app.Services.CreateScope();
+{
+    var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+    await db.Database.EnsureCreatedAsync();
+    SeedingService seedingService = scope.ServiceProvider.GetRequiredService<SeedingService>();
+    await seedingService.Seed();
+}
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())

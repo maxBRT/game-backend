@@ -1,9 +1,10 @@
 {
   "version": 2,
-  "dgSpecHash": "4YCHcTOayfw=",
+  "dgSpecHash": "VXvJr8C89tE=",
   "success": true,
   "projectFilePath": "/home/max/dev/game-backend/player-service/player-service.csproj",
   "expectedPackageFiles": [
+    "/home/max/.nuget/packages/csvhelper/33.1.0/csvhelper.33.1.0.nupkg.sha512",
     "/home/max/.nuget/packages/humanizer.core/2.14.1/humanizer.core.2.14.1.nupkg.sha512",
     "/home/max/.nuget/packages/microsoft.aspnetcore.openapi/10.0.0/microsoft.aspnetcore.openapi.10.0.0.nupkg.sha512",
     "/home/max/.nuget/packages/microsoft.build.framework/18.0.2/microsoft.build.framework.18.0.2.nupkg.sha512",
