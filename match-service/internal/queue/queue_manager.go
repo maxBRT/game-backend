@@ -48,3 +48,7 @@ func (m *QueueManager) GetPlayerStatus(TicketID string) (matched bool, position 
 	return false, -1, nil
 
 }
+
+func (m *QueueManager) Contains(TicketID string) bool {
+	return m.survivorsQueue.Contains(TicketID) || m.killerQueue.Contains(TicketID) || m.store.Contains(TicketID)
+}

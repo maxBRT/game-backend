@@ -60,3 +60,7 @@ func (s *InMemoryMatchStore) RemoveMatch(ticketID string) bool {
 
 	return true
 }
+
+func (s *InMemoryMatchStore) Contains(ticketID string) bool {
+	return s.ticketToMatch[ticketID] != ""
+}
