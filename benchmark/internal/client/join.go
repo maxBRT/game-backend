@@ -9,6 +9,7 @@ import (
 	"io"
 	"log"
 	"net/http"
+	"strings"
 )
 
 func (c *MatchClient) Join(ctx context.Context, player PlayerInfo) (*JoinResponse, error) {
@@ -49,7 +50,15 @@ func (c *MatchClient) Join(ctx context.Context, player PlayerInfo) (*JoinRespons
 
 	if resp.StatusCode != http.StatusOK {
 		body, _ := io.ReadAll(resp.Body)
-		return nil, fmt.Errorf("join failed (status %d): %s", resp.StatusCode, body)
+		msg := string(body)
+		switch {
+		case strings.Contains(msg, "player id , name or role field missing"):
+			return nil, fmt.Errorf("%w, message: %s", ErrPlayerFieldMissing, string(body))
+		case strings.Contains(msg, "role must be either 'survivor' or 'killer'"):
+			return nil, fmt.Errorf("%w, message: %s", ErrInvalidRole, string(body))
+		default:
+			return nil, &APIError{StatusCode: resp.StatusCode, Message: string(body)}
+		}
 	}
 
 	var response JoinResponse

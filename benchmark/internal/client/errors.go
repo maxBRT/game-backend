@@ -12,6 +12,10 @@ var (
 	ErrInvalidTicketID    = errors.New("invalid or unknown ticket id")
 	ErrPlayerFieldMissing = errors.New("player id , name or role field missing")
 	ErrInvalidRole        = errors.New("role must be either 'survivor' or 'killer'")
+	ErrInsufficientFunds  = errors.New("insufficient funds")
+	ErrPlayerNotFound     = errors.New("player not found")
+	ErrItemNotFound       = errors.New("item not found")
+	ErrInvalidQuantity    = errors.New("invalid quantity")
 )
 
 type APIError struct {

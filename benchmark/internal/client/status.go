@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"io"
 	"log"
 	"net/http"
 )
@@ -39,7 +40,13 @@ func (c *MatchClient) Status(ctx context.Context, ticketID string) (*StatusRespo
 	defer resp.Body.Close()
 
 	if resp.StatusCode != http.StatusOK {
-		return nil, fmt.Errorf("status check failed with status code %d", resp.StatusCode)
+		body, _ := io.ReadAll(resp.Body)
+		switch resp.StatusCode {
+		case http.StatusBadRequest:
+			return nil, fmt.Errorf("%w, message: %s", ErrInvalidTicketID, string(body))
+		default:
+			return nil, &APIError{StatusCode: resp.StatusCode, Message: string(body)}
+		}
 	}
 
 	var response StatusResponse
