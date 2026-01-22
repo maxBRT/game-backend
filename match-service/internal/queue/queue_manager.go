@@ -21,11 +21,11 @@ func NewQueueManager(survivorsQ Queue, killerQ Queue, store MatchStore) *QueueMa
 	}
 }
 
-func (m *QueueManager) AddPlayer(player m.Player) {
+func (m *QueueManager) AddPlayer(player m.Player) int {
 	if player.IsSurvivor() {
-		m.survivorsQueue.Enqueue(player)
+		return m.survivorsQueue.Enqueue(player)
 	} else {
-		m.killerQueue.Enqueue(player)
+		return m.killerQueue.Enqueue(player)
 	}
 }
 
