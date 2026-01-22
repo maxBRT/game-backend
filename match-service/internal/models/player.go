@@ -4,6 +4,7 @@ type Player struct {
 	ID       string `json:"id"`
 	Name     string `json:"name"`
 	Role     string `json:"Role"`
+	Position int    `json:"position"`
 	TicketID string `json:"ticketID"`
 }
 

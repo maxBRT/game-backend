@@ -20,12 +20,17 @@ func NewMatchStore() *InMemoryMatchStore {
 	}
 }
 
-func (s *InMemoryMatchStore) StoreMatch(match *m.Match, ticketID string) {
+func (s *InMemoryMatchStore) StoreMatch(match *m.Match) {
 	s.mu.Lock()
 	defer s.mu.Unlock()
 
 	s.matches[match.ID] = match
-	s.ticketToMatch[ticketID] = match.ID
+
+	for _, survivor := range match.Survivors {
+		s.ticketToMatch[survivor.TicketID] = match.ID
+	}
+
+	s.ticketToMatch[match.Killer.TicketID] = match.ID
 }
 
 func (s *InMemoryMatchStore) GetMatch(ticketID string) (match *m.Match, ok bool) {

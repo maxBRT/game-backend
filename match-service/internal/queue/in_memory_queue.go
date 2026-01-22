@@ -6,16 +6,16 @@ import (
 )
 
 type InMemoryQueue struct {
-	players    []m.Player
-	ticketsIDs map[string]int
-	mu         sync.Mutex
+	players   []m.Player
+	playerMap map[string]*m.Player
+	mu        sync.Mutex
 }
 
 func NewInMemoryQueue() *InMemoryQueue {
 	return &InMemoryQueue{
-		players:    make([]m.Player, 0),
-		ticketsIDs: make(map[string]int),
-		mu:         sync.Mutex{},
+		players:   make([]m.Player, 0),
+		playerMap: make(map[string]*m.Player),
+		mu:        sync.Mutex{},
 	}
 }
 
@@ -24,8 +24,9 @@ func (q *InMemoryQueue) Enqueue(player m.Player) (position int) {
 	defer q.mu.Unlock()
 
 	q.players = append(q.players, player)
-	q.ticketsIDs[player.TicketID] = len(q.players) - 1
-	return len(q.players) - 1
+	q.playerMap[player.TicketID] = &player
+	player.Position = len(q.players) - 1
+	return player.Position
 }
 
 func (q *InMemoryQueue) Dequeue() (player m.Player, ok bool) {
@@ -60,17 +61,25 @@ func (q *InMemoryQueue) Remove(TicketID string) bool {
 		return false
 	}
 
-	i := q.ticketsIDs[TicketID]
+	i := q.playerMap[TicketID].Position
 	q.players = append(q.players[:i], q.players[i+1:]...)
-	delete(q.ticketsIDs, TicketID)
+	delete(q.playerMap, TicketID)
 
 	return true
 }
 
 func (q *InMemoryQueue) Contains(TicketID string) bool {
-	return q.ticketsIDs[TicketID] != -1
+	_, ok := q.playerMap[TicketID]
+	return ok
 }
 
 func (q *InMemoryQueue) GetPosition(TicketID string) (position int, ok bool) {
 	return 0, false
+}
+
+// This could be optimized
+func (q *InMemoryQueue) Recalculate() {
+	for i := range q.players {
+		q.players[i].Position = i
+	}
 }

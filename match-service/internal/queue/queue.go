@@ -13,4 +13,5 @@ type Queue interface {
 	Remove(TicketID string) bool
 	Contains(TicketID string) bool
 	GetPosition(TicketID string) (position int, ok bool)
+	Recalculate()
 }

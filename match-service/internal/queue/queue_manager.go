@@ -1,6 +1,8 @@
 package queue
 
 import (
+	"sync"
+
 	m "github.com/maxbrt/game-backend/match-service/internal/models"
 )
 
@@ -8,6 +10,7 @@ type QueueManager struct {
 	survivorsQueue Queue
 	killerQueue    Queue
 	store          MatchStore
+	mu             sync.Mutex
 }
 
 func NewQueueManager(survivorsQ Queue, killerQ Queue, store MatchStore) *QueueManager {
