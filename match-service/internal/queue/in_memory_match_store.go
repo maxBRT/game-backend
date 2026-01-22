@@ -12,7 +12,7 @@ type InMemoryMatchStore struct {
 	mu            sync.Mutex
 }
 
-func NewMatchStore() *InMemoryMatchStore {
+func NewInMemoryMatchStore() *InMemoryMatchStore {
 	return &InMemoryMatchStore{
 		matches:       make(map[string]*m.Match),
 		ticketToMatch: make(map[string]string),

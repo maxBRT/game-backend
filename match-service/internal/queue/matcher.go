@@ -1,6 +1,7 @@
 package queue
 
 import (
+	"log"
 	"time"
 
 	"github.com/google/uuid"
@@ -23,6 +24,7 @@ func NewMatcher(queueManager *QueueManager, matchInterval time.Duration) *Matche
 
 func (m *Matcher) Start() {
 	go func() {
+		log.Println("Starting matcher...")
 		for {
 			select {
 			case <-m.stopChan:
