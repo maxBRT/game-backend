@@ -1,6 +1,7 @@
 package queue
 
 import (
+	"fmt"
 	"sync"
 
 	m "github.com/maxbrt/game-backend/match-service/internal/models"
@@ -27,9 +28,11 @@ func (s *InMemoryMatchStore) StoreMatch(match *m.Match) {
 	s.matches[match.ID] = match
 
 	for _, survivor := range match.Survivors {
+		fmt.Printf("Storing survivor ticket: %s\n", survivor.TicketID)
 		s.ticketToMatch[survivor.TicketID] = match.ID
 	}
 
+	fmt.Printf("Storing killer ticket: %s\n", match.Killer.TicketID)
 	s.ticketToMatch[match.Killer.TicketID] = match.ID
 }
 
@@ -62,5 +65,7 @@ func (s *InMemoryMatchStore) RemoveMatch(ticketID string) bool {
 }
 
 func (s *InMemoryMatchStore) Contains(ticketID string) bool {
+	s.mu.Lock()
+	defer s.mu.Unlock()
 	return s.ticketToMatch[ticketID] != ""
 }

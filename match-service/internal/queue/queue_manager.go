@@ -1,6 +1,7 @@
 package queue
 
 import (
+	"fmt"
 	"sync"
 
 	m "github.com/maxbrt/game-backend/match-service/internal/models"

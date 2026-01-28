@@ -6,8 +6,23 @@ public class MetricsService
     private long _systemErrorCount;
     private long _totalRequestCount;
     private long _clientErrorCount;
+    private long _playerInQueueCount;
+    private long _playerMatchedCount;
 
     private readonly ConcurrentDictionary<string, OperationMetrics> _operationMetrics = new();
+
+    public void IncrementPlayerInQueueCount()
+    {
+        Interlocked.Increment(ref _playerInQueueCount);
+    }
+
+    public void IncrementPlayerMatchedCount()
+    {
+        Interlocked.Increment(ref _playerMatchedCount);
+    }
+
+    public long GetPlayerInQueueCount() => Interlocked.Read(ref _playerInQueueCount);
+    public long GetPlayerMatchedCount() => Interlocked.Read(ref _playerMatchedCount);
 
     public void RecordRequest(string operation, double elapsedMs, bool isSystemError, bool isClientError = false)
     {

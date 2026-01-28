@@ -13,15 +13,6 @@ import (
 )
 
 func main() {
-	sigs := make(chan os.Signal, 1)
-	signal.Notify(sigs, syscall.SIGINT, syscall.SIGTERM)
-
-	go func() {
-		<-sigs
-		fmt.Println("\nService interrupted, shutting down...")
-		os.Exit(0)
-	}()
-
 	queueManager := q.NewQueueManager(q.NewInMemoryQueue(), q.NewInMemoryQueue(), q.NewInMemoryMatchStore())
 	matcher := q.NewMatcher(queueManager, 100*time.Millisecond)
 	matcher.Start()
@@ -38,6 +29,25 @@ func main() {
 		w.Write([]byte("OK"))
 	})
 
+	server := &http.Server{
+		Addr:         ":8000",
+		Handler:      mux,
+		ReadTimeout:  5 * time.Second,
+		WriteTimeout: 15 * time.Second, // Must be > pollTimeout (10s)
+		IdleTimeout:  60 * time.Second,
+	}
+
+	go func() {
+		sigs := make(chan os.Signal, 1)
+		signal.Notify(sigs, syscall.SIGINT, syscall.SIGTERM)
+		<-sigs
+		fmt.Println("\nShutting down...")
+		server.Close()
+	}()
+
 	fmt.Println("Match service started on port 8000")
-	http.ListenAndServe(":8000", mux)
+	if err := server.ListenAndServe(); err != http.ErrServerClosed {
+		fmt.Printf("Server error: %v\n", err)
+		os.Exit(1)
+	}
 }

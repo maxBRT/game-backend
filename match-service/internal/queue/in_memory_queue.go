@@ -1,8 +1,10 @@
 package queue
 
 import (
-	m "github.com/maxbrt/game-backend/match-service/internal/models"
+	"fmt"
 	"sync"
+
+	m "github.com/maxbrt/game-backend/match-service/internal/models"
 )
 
 type InMemoryQueue struct {
@@ -26,6 +28,7 @@ func (q *InMemoryQueue) Enqueue(player m.Player) (position int) {
 	q.players = append(q.players, player)
 	q.playerMap[player.TicketID] = &player
 	player.Position = len(q.players) - 1
+	fmt.Printf("Enqueued ticket: %s, map size: %d, slice size: %d\n", player.TicketID, len(q.playerMap), len(q.players))
 	return player.Position
 }
 
@@ -43,13 +46,20 @@ func (q *InMemoryQueue) Dequeue() (player m.Player, ok bool) {
 }
 
 func (q *InMemoryQueue) IsEmpty() bool {
+	q.mu.Lock()
+	defer q.mu.Unlock()
 	return len(q.players) == 0
 }
 
 func (q *InMemoryQueue) Len() int {
+	q.mu.Lock()
+	defer q.mu.Unlock()
 	return len(q.players)
 }
+
 func (q *InMemoryQueue) Peek(n int) (players []m.Player) {
+	q.mu.Lock()
+	defer q.mu.Unlock()
 	return q.players[:n]
 }
 
@@ -57,7 +67,7 @@ func (q *InMemoryQueue) Remove(TicketID string) bool {
 	q.mu.Lock()
 	defer q.mu.Unlock()
 
-	if ok := q.Contains(TicketID); !ok {
+	if _, ok := q.playerMap[TicketID]; !ok {
 		return false
 	}
 
@@ -81,16 +91,23 @@ func (q *InMemoryQueue) Remove(TicketID string) bool {
 }
 
 func (q *InMemoryQueue) Contains(TicketID string) bool {
+	q.mu.Lock()
+	defer q.mu.Unlock()
 	_, ok := q.playerMap[TicketID]
+	fmt.Printf("Contains check for %s: found=%v, map size=%d\n", TicketID, ok, len(q.playerMap))
 	return ok
 }
 
 func (q *InMemoryQueue) GetPosition(TicketID string) (position int, ok bool) {
+	q.mu.Lock()
+	defer q.mu.Unlock()
 	return 0, false
 }
 
 // This could be optimized
 func (q *InMemoryQueue) Recalculate() {
+	q.mu.Lock()
+	defer q.mu.Unlock()
 	for i := range q.players {
 		q.players[i].Position = i
 	}

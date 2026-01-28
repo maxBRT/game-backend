@@ -47,8 +47,10 @@ func (h *StatusHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	fmt.Printf("Checking ticket: %s\n", ticketID)
+
 	if ok := h.QueueManager.Contains(ticketID); !ok {
-		fmt.Println("ticketID not found")
+		fmt.Printf("ticketID not found: %s\n", ticketID)
 		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
@@ -64,18 +66,21 @@ func (h *StatusHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	for {
 		select {
 		case <-ctx.Done():
-			err := ctx.Err()
-			if err == context.DeadlineExceeded {
+			if ctx.Err() == context.DeadlineExceeded {
 				_, position, _ := h.QueueManager.GetPlayerStatus(ticketID)
 				resp := WaitingResponse{
 					Status:        "waiting",
 					QueuePosition: position,
 				}
 				json.NewEncoder(w).Encode(resp)
-				return
 			}
+			// Return on any context cancellation (timeout or client disconnect)
 			return
 		case <-ticker.C:
+			// Check if request context was cancelled (client disconnect)
+			if r.Context().Err() != nil {
+				return
+			}
 			matched, _, match := h.QueueManager.GetPlayerStatus(ticketID)
 			if matched {
 				resp := MatchResponse{

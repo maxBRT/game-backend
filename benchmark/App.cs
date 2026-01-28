@@ -29,10 +29,13 @@ public class App(IPurchaseClient purchaseClient, MetricsService metricsService, 
                 var survivorTask = ctx.AddTask("[green]Queueing Survivors[/]", maxValue: config.SurvivorCount);
                 var killerTask = ctx.AddTask("[red]Queueing Killers[/]", maxValue: config.KillerCount);
                 var purchaseTask = ctx.AddTask("[yellow]Processing Purchases[/]", maxValue: config.PurchaseCount);
+                var matchedTask = ctx.AddTask("[blue]Matched[/]", maxValue: config.SurvivorCount + config.KillerCount);
 
-                await QueueSurvivors(config.SurvivorCount, survivorTask);
-                await QueueKillers(config.KillerCount, killerTask);
-                await PurchaseItems(config.PurchaseCount, purchaseTask);
+                var queueSurvivors = QueueSurvivors(config.SurvivorCount, survivorTask, matchedTask);
+                var queueKillers = QueueKillers(config.KillerCount, killerTask, matchedTask);
+                var purchaseItems = PurchaseItems(config.PurchaseCount, purchaseTask);
+
+                await Task.WhenAll(queueSurvivors, queueKillers, purchaseItems);
             });
 
         stopwatch.Stop();
@@ -40,23 +43,49 @@ public class App(IPurchaseClient purchaseClient, MetricsService metricsService, 
         PrintSummary(stopwatch.Elapsed, config);
     }
 
-    private async Task QueueSurvivors(int n, ProgressTask task)
+    private async Task QueueSurvivors(int n, ProgressTask task, ProgressTask matchedTask)
     {
+        var activeTasks = new List<Task>();
+
         for (int i = 0; i < n; i++)
         {
             var p = await playerClient.GetPlayer();
-            await matchClient.JoinQueue(new JoinRequest(p.ToPlayerInfoSurvivor()));
+            var res = await matchClient.JoinQueue(new JoinRequest(p.ToPlayerInfoSurvivor()));
+            if (res.Success) activeTasks.Add(PollStatus(res.TicketID, matchedTask));
             task.Increment(1);
         }
+
+        await Task.WhenAll(activeTasks);
     }
 
-    private async Task QueueKillers(int n, ProgressTask task)
+    private async Task QueueKillers(int n, ProgressTask task, ProgressTask matchedTask)
     {
+        var activeTasks = new List<Task>();
+
         for (int i = 0; i < n; i++)
         {
             var p = await playerClient.GetPlayer();
-            await matchClient.JoinQueue(new JoinRequest(p.ToPlayerInfoKiller()));
+            var res = await matchClient.JoinQueue(new JoinRequest(p.ToPlayerInfoKiller()));
+            if (res.Success) activeTasks.Add(PollStatus(res.TicketID, matchedTask));
             task.Increment(1);
+        }
+
+        await Task.WhenAll(activeTasks);
+    }
+
+    private async Task PollStatus(string ticketId, ProgressTask matchedTask)
+    {
+        var timeout = DateTime.UtcNow.AddSeconds(60);
+        while (DateTime.UtcNow < timeout)
+        {
+            var status = await matchClient.GetStatus(ticketId);
+            if (status.IsMatched)
+            {
+                matchedTask.Increment(1);
+                return;
+            }
+            if (status.IsWaiting) continue;
+            return;
         }
     }
 
@@ -89,6 +118,7 @@ public class App(IPurchaseClient purchaseClient, MetricsService metricsService, 
         overviewTable.AddRow("[green]Success[/]", $"{totalRequests - metricsService.GetSystemErrorCount() - metricsService.GetClientErrorCount()}");
         overviewTable.AddRow("[yellow]Client Errors[/]", $"{metricsService.GetClientErrorCount()}");
         overviewTable.AddRow("[red]System Errors[/]", $"{metricsService.GetSystemErrorCount()}");
+        overviewTable.AddRow("[blue]Player Matched[/]", $"{metricsService.GetPlayerMatchedCount()}");
 
         AnsiConsole.Write(overviewTable);
         AnsiConsole.WriteLine();

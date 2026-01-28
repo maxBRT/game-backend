@@ -29,7 +29,10 @@ public class MatchClient(HttpClient httpClient, MetricsService metrics) : IMatch
             return new StatusResponse("Something went wrong", null, null, null, null);
         }
 
-        return statusResponse ?? new StatusResponse("Something went wrong", null, null, null, null);
+        if (statusResponse == null) return new StatusResponse("Something went wrong", null, null, null, null);
+        if (statusResponse.IsMatched) _metrics.IncrementPlayerMatchedCount();
+
+        return statusResponse;
     }
 
     public async Task<JoinResponse> JoinQueue(JoinRequest request)
@@ -62,6 +65,7 @@ public class MatchClient(HttpClient httpClient, MetricsService metrics) : IMatch
             return new JoinResponse(false, 0, "", "");
         }
 
+        if (!isSystemError && !isClientError) _metrics.IncrementPlayerInQueueCount();
         return joinResponse ?? new JoinResponse(false, 0, "", "");
     }
 }
