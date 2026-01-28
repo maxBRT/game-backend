@@ -61,7 +61,19 @@ func (q *InMemoryQueue) Remove(TicketID string) bool {
 		return false
 	}
 
-	i := q.playerMap[TicketID].Position
+	// Find actual index in slice (stored Position may be stale)
+	i := -1
+	for idx, p := range q.players {
+		if p.TicketID == TicketID {
+			i = idx
+			break
+		}
+	}
+
+	if i == -1 {
+		return false
+	}
+
 	q.players = append(q.players[:i], q.players[i+1:]...)
 	delete(q.playerMap, TicketID)
 

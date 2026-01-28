@@ -44,11 +44,13 @@ func (h *JoinHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	playerRole := req.Player.Role
 
 	if playerId == "" || playerName == "" || playerRole == "" {
+		fmt.Println("player id, name and role are required")
 		http.Error(w, fmt.Sprintf("player id, name and role are required"), http.StatusBadRequest)
 		return
 	}
 
 	if playerRole != "survivor" && playerRole != "killer" {
+		fmt.Println("player role must be either survivor or killer")
 		http.Error(w, fmt.Sprintf("player role must be either survivor or killer"), http.StatusBadRequest)
 		return
 	}

@@ -3,6 +3,7 @@ package handlers
 import (
 	"context"
 	"encoding/json"
+	"fmt"
 	"net/http"
 	"time"
 
@@ -17,10 +18,10 @@ type WaitingResponse struct {
 }
 
 type MatchResponse struct {
-	Status    string `json:"status"`
-	MatchID   string `json:"matchID"`
-	Survivors []m.PlayerInfo
-	Killer    m.PlayerInfo
+	Status    string         `json:"status"`
+	MatchID   string         `json:"matchID"`
+	Survivors []m.PlayerInfo `json:"survivors"`
+	Killer    m.PlayerInfo   `json:"killer"`
 }
 
 type StatusHandler struct {
@@ -39,13 +40,15 @@ func NewStatusHandler(queueManager *q.QueueManager, pollTimeout, pollInterval ti
 
 func (h *StatusHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 
-	ticketID := r.Header.Get("TicketID")
+	ticketID := r.PathValue("ticketID")
 	if ticketID == "" {
+		fmt.Println("TicketID is required")
 		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
 
 	if ok := h.QueueManager.Contains(ticketID); !ok {
+		fmt.Println("ticketID not found")
 		w.WriteHeader(http.StatusBadRequest)
 		return
 	}

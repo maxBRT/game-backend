@@ -7,7 +7,7 @@ public class Inventory
     public int Amount { get; set; }
     public DateTime AquiredAt { get; set; }
 
-    public Player Player { get; set; }
-    public Item Item { get; set; }
+    public required Player Player { get; set; }
+    public required Item Item { get; set; }
 }
 
