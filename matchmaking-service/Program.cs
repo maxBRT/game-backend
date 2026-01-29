@@ -6,8 +6,9 @@ var builder = WebApplication.CreateBuilder(args);
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi();
 
+builder.Services.AddKeyedSingleton<IQueueService, InMemoryQueueService>("survivor");
+builder.Services.AddKeyedSingleton<IQueueService, InMemoryQueueService>("killer");
 builder.Services.AddSingleton<IQueueManager, QueueManager>();
-builder.Services.AddSingleton<IQueueService, InMemoryQueueService>();
 builder.Services.AddSingleton<IMatchStore, InMemoryMatchStore>();
 builder.Services.AddHostedService<MatcherWorker>();
 builder.Services.AddControllers();
@@ -21,6 +22,8 @@ if (app.Environment.IsDevelopment())
     app.MapScalarApiReference();
 }
 
+
+app.MapGet("/health", () => "OK");
 app.UseHttpsRedirection();
 app.MapControllers();
 

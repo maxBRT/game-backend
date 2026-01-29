@@ -1,4 +1,7 @@
-public class QueueManager(IQueueService survivorQueueService, IQueueService killerQueueService, IMatchStore matchStore) : IQueueManager
+public class QueueManager(
+    [FromKeyedServices("survivor")] IQueueService survivorQueueService,
+    [FromKeyedServices("killer")] IQueueService killerQueueService,
+    IMatchStore matchStore) : IQueueManager
 {
     private readonly IQueueService _survivorQueueService = survivorQueueService;
     private readonly IQueueService _killerQueueService = killerQueueService;

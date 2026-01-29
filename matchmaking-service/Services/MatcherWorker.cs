@@ -1,13 +1,12 @@
 public class MatcherWorker(IQueueManager queueManager) : BackgroundService
 {
     private readonly IQueueManager _queueManager = queueManager;
-    private readonly TimeSpan _interval = TimeSpan.FromSeconds(1);
 
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
         while (!stoppingToken.IsCancellationRequested)
         {
-            await Task.Delay(_interval);
+            await Task.Delay(2);
             if (await _queueManager.KillerCount() == 0) continue;
             if (await _queueManager.SurvivorCount() < 4) continue;
 

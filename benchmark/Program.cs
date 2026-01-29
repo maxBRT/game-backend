@@ -14,24 +14,19 @@ Option<int> purchaseOption = new("-b")
 {
     Description = "The number of purchase request"
 };
-Option<int> timeOption = new("-t")
-{
-    Description = "The time to run in seconds"
-};
+
 
 
 var rootCommand = new RootCommand("Game Backend Benchmark");
 rootCommand.Options.Add(survivorOption);
 rootCommand.Options.Add(killerOption);
 rootCommand.Options.Add(purchaseOption);
-rootCommand.Options.Add(timeOption);
 ParseResult parsedResult = rootCommand.Parse(args);
 
 var config = new BenchmarkConfig(
         parsedResult.GetValue(survivorOption) > 0 ? parsedResult.GetValue(survivorOption) : 100,
         parsedResult.GetValue(killerOption) > 0 ? parsedResult.GetValue(killerOption) : 20,
-        parsedResult.GetValue(purchaseOption) > 0 ? parsedResult.GetValue(purchaseOption) : 50,
-        parsedResult.GetValue(timeOption) > 0 ? parsedResult.GetValue(timeOption) : 60
+        parsedResult.GetValue(purchaseOption) > 0 ? parsedResult.GetValue(purchaseOption) : 50
         );
 
 using IHost host = Host.CreateDefaultBuilder(args)

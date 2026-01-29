@@ -13,7 +13,7 @@ public class StatusController
         {
             while (!cts.IsCancellationRequested)
             {
-                await Task.Delay(50);
+                await Task.Delay(10);
                 var match = await _queueManager.GetPlayerStatus(TicketID);
 
                 if (match == null) continue;
