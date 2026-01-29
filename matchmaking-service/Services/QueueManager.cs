@@ -16,35 +16,20 @@ public class QueueManager(IQueueService survivorQueueService, IQueueService kill
         }
     }
 
-    public async Task<bool> AddPlayerToQueue(Player player)
+    public async Task<Match?> GetPlayerStatus(string TicketID)
     {
-        if (player.IsKiller)
-        {
-            await _killerQueueService.Enqueue(player);
-            return true;
-        }
-        if (player.IsSurvivor)
-        {
-            await _survivorQueueService.Enqueue(player);
-            return true;
-        }
-        return false;
-    }
-
-    public async Task<bool> GetPlayerStatus(string TicketID)
-    {
-        if (await _matchStore.GetMatch(TicketID) != null) return true;
-        else return false;
+        var match = await _matchStore.GetMatch(TicketID);
+        return match ?? null;
     }
 
     public async Task<int> SurvivorCount()
     {
-        return await _survivorQueueService.Count();
+        return _survivorQueueService.Count();
     }
 
     public async Task<int> KillerCount()
     {
-        return await _killerQueueService.Count();
+        return _killerQueueService.Count();
     }
 
     public async Task<List<Player>> GetSurvivors()

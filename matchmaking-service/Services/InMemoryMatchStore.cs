@@ -18,9 +18,11 @@ public class InMemoryMatchStore : IMatchStore
 
     }
 
-    public async Task<Match> GetMatch(string TicketId)
+    public async Task<Match?> GetMatch(string TicketId)
     {
-        return await Task.FromResult(matchMap[playerTicketToMatchIdMap[TicketId]]);
+        playerTicketToMatchIdMap.TryGetValue(TicketId, out var matchId);
+        if (matchId == null) return null;
+        return matchMap.TryGetValue(matchId, out var match) ? match : null;
     }
 
     public async Task<Match?> RemoveMatch(string MatchId)

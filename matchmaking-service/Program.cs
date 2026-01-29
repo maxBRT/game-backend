@@ -10,6 +10,7 @@ builder.Services.AddSingleton<IQueueManager, QueueManager>();
 builder.Services.AddSingleton<IQueueService, InMemoryQueueService>();
 builder.Services.AddSingleton<IMatchStore, InMemoryMatchStore>();
 builder.Services.AddHostedService<MatcherWorker>();
+builder.Services.AddControllers();
 
 var app = builder.Build();
 
@@ -21,7 +22,7 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
-
+app.MapControllers();
 
 
 app.Run();

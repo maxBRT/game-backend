@@ -1,8 +1,7 @@
 public interface IQueueManager
 {
     Task AddPlayer(Player player);
-    Task<bool> AddPlayerToQueue(Player player);
-    Task<bool> GetPlayerStatus(string TicketID);
+    Task<Match?> GetPlayerStatus(string TicketID);
     Task<int> SurvivorCount();
     Task<int> KillerCount();
     Task<List<Player>> GetSurvivors();

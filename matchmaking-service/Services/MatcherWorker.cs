@@ -1,7 +1,7 @@
-public class MatcherWorker(IQueueManager queueManager, TimeSpan interval) : BackgroundService
+public class MatcherWorker(IQueueManager queueManager) : BackgroundService
 {
     private readonly IQueueManager _queueManager = queueManager;
-    private readonly TimeSpan _interval = interval;
+    private readonly TimeSpan _interval = TimeSpan.FromSeconds(1);
 
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
