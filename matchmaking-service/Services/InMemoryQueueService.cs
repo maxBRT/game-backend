@@ -5,15 +5,13 @@ public class InMemoryQueueService : IQueueService
     private readonly ConcurrentDictionary<string, Player> playerMap = new();
     private readonly ConcurrentQueue<Player> _queue = new();
 
-    public async Task<bool> Contains(string TicketID)
+    public bool Contains(string TicketID)
     {
-        return await Task.FromResult(playerMap.ContainsKey(TicketID));
+        return playerMap.ContainsKey(TicketID);
     }
-    public async Task<Player?> Dequeue()
+    public Player? TryDequeue()
     {
         _queue.TryDequeue(out var player);
-        if (player == null) return null;
-        playerMap.TryRemove(player.TicketID, out var _);
         return player;
     }
 
@@ -27,5 +25,4 @@ public class InMemoryQueueService : IQueueService
     {
         return _queue.Count;
     }
-
 }

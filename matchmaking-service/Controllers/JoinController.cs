@@ -15,7 +15,7 @@ public class JoinController
         }
         catch (Exception e)
         {
-            Console.Error.WriteLine(e.Message, "Error joining queue");
+            Console.Error.WriteLine(e.Message);
             return TypedResults.InternalServerError();
         }
     }

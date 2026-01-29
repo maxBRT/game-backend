@@ -4,8 +4,6 @@ using Microsoft.AspNetCore.Mvc;
 [ApiController]
 public class StoreController(IStoreService storeService)
 {
-    private readonly IStoreService _storeService = storeService;
-
     [HttpPost("store/buy")]
     public async
         Task<
@@ -18,7 +16,7 @@ public class StoreController(IStoreService storeService)
     {
         try
         {
-            var (result, currency, itemName) = await _storeService.BuyItem(request);
+            var (result, currency, itemName) = await storeService.BuyItem(request);
             return TypedResults.Ok(new BuyResponse(result, currency, itemName));
         }
         catch (Exception e)

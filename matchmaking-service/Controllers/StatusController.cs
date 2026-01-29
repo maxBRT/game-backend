@@ -8,7 +8,7 @@ public class StatusController
     public async Task<Results<Ok<StatusResponse>, InternalServerError>> Status(string TicketID, CancellationToken cancellationToken, IQueueManager _queueManager)
     {
         var cts = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken);
-        var timeout = Task.Delay(TimeSpan.FromSeconds(30), cts.Token);
+        cts.CancelAfter(TimeSpan.FromSeconds(30));
         try
         {
             while (!cts.IsCancellationRequested)
@@ -23,6 +23,10 @@ public class StatusController
                 return TypedResults.Ok(new StatusResponse("matched", match.Id, survivors, match.Killer.ToPlayerInfo()));
             }
 
+            return TypedResults.Ok(new StatusResponse("waiting", null, null, null));
+        }
+        catch (TaskCanceledException)
+        {
             return TypedResults.Ok(new StatusResponse("waiting", null, null, null));
         }
         catch (Exception e)

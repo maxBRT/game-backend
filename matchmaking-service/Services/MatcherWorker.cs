@@ -7,18 +7,15 @@ public class MatcherWorker(IQueueManager queueManager) : BackgroundService
         while (!stoppingToken.IsCancellationRequested)
         {
             await Task.Delay(2);
-            if (await _queueManager.KillerCount() == 0) continue;
-            if (await _queueManager.SurvivorCount() < 4) continue;
 
-            var killer = await _queueManager.GetKiller();
+            var survivors = _queueManager.GetSurvivors();
+            if (survivors == null) continue;
+
+            var killer = _queueManager.GetKiller();
             if (killer == null) continue;
-
-            var survivors = await _queueManager.GetSurvivors();
-            if (survivors.Count < 4) continue;
 
             var match = new Match(Guid.NewGuid().ToString(), survivors, killer);
             await _queueManager.CreateMatch(match);
         }
-
     }
 }

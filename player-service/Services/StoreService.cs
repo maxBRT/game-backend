@@ -52,7 +52,7 @@ public class StoreService(AppDbContext db) : IStoreService
                     Player = player,
                     Item = item,
                     Amount = request.Amount,
-                    AquiredAt = DateTime.Now
+                    AcquiredAt = DateTime.Now
                 });
             }
 
@@ -64,8 +64,9 @@ public class StoreService(AppDbContext db) : IStoreService
         }
         catch (Exception e)
         {
+            Console.Error.WriteLine(e.Message);
             await transaction.RollbackAsync();
-            throw e;
+            throw;
         }
 
     }

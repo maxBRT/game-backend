@@ -3,57 +3,55 @@ public class QueueManager(
     [FromKeyedServices("killer")] IQueueService killerQueueService,
     IMatchStore matchStore) : IQueueManager
 {
-    private readonly IQueueService _survivorQueueService = survivorQueueService;
-    private readonly IQueueService _killerQueueService = killerQueueService;
-    private readonly IMatchStore _matchStore = matchStore;
+    private readonly Lock _lock = new();
 
     public async Task AddPlayer(Player player)
     {
         if (player.IsKiller)
         {
-            await _killerQueueService.Enqueue(player);
+            await killerQueueService.Enqueue(player);
         }
-        if (player.IsSurvivor)
+        else if (player.IsSurvivor)
         {
-            await _survivorQueueService.Enqueue(player);
+            await survivorQueueService.Enqueue(player);
         }
     }
 
     public async Task<Match?> GetPlayerStatus(string TicketID)
     {
-        var match = await _matchStore.GetMatch(TicketID);
-        return match ?? null;
+        var match = await matchStore.GetMatch(TicketID);
+        return match;
     }
 
-    public async Task<int> SurvivorCount()
-    {
-        return _survivorQueueService.Count();
-    }
 
-    public async Task<int> KillerCount()
+    public List<Player>? GetSurvivors()
     {
-        return _killerQueueService.Count();
-    }
-
-    public async Task<List<Player>> GetSurvivors()
-    {
-        var survivors = new List<Player>();
-        for (int i = 0; i < 4; i++)
+        lock (_lock)
         {
-            var s = await _survivorQueueService.Dequeue();
-            if (s == null) return [];
-            survivors.Add(s);
+            if (survivorQueueService.Count() < 4) return null;
+            var survivors = new List<Player>();
+
+            for (int i = 0; i < 4; i++)
+            {
+                var s = survivorQueueService.TryDequeue();
+                if (s == null) return null;
+                survivors.Add(s);
+            }
+
+            return survivors;
         }
-        return survivors;
     }
 
-    public Task<Player?> GetKiller()
+    public Player? GetKiller()
     {
-        return _killerQueueService.Dequeue();
+        lock (_lock)
+        {
+            return killerQueueService.TryDequeue();
+        }
     }
 
     public async Task CreateMatch(Match match)
     {
-        await _matchStore.AddMatch(match);
+        await matchStore.AddMatch(match);
     }
 }
