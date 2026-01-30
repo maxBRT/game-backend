@@ -25,15 +25,4 @@ public class InMemoryMatchStore : IMatchStore
         return matchMap.TryGetValue(matchId, out var match) ? match : null;
     }
 
-    public async Task<Match?> RemoveMatch(string MatchId)
-    {
-        matchMap.TryRemove(MatchId, out var match);
-        if (match == null) return null;
-        foreach (var player in match.Survivors)
-        {
-            playerTicketToMatchIdMap.TryRemove(player.TicketID, out var _);
-        }
-        playerTicketToMatchIdMap.TryRemove(match.Killer.TicketID, out var _);
-        return match;
-    }
 }

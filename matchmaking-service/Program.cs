@@ -9,7 +9,7 @@ builder.Services.AddOpenApi();
 
 
 builder.Services.AddSingleton<IQueueManager, QueueManager>();
-builder.Services.AddSingleton<IMatchStore, InMemoryMatchStore>();
+builder.Services.AddSingleton<IMatchStore, RedisMatchStore>();
 
 var multiplexer = ConnectionMultiplexer.Connect("localhost:6379,allowAdmin=true");
 
