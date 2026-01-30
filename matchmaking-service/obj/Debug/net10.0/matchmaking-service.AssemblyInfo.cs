@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("matchmaking-service")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+ff182590fe114a18f527e63bcf3ca95869e22da0")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+33c0f2350cfc081382fdffb2d756972fc6a674ad")]
 [assembly: System.Reflection.AssemblyProductAttribute("matchmaking-service")]
 [assembly: System.Reflection.AssemblyTitleAttribute("matchmaking-service")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
