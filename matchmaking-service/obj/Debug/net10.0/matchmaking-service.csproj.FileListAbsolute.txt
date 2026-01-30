@@ -33,3 +33,6 @@
 /home/max/dev/game-backend/matchmaking-service/obj/Debug/net10.0/matchmaking-service.pdb
 /home/max/dev/game-backend/matchmaking-service/obj/Debug/net10.0/matchmaking-service.genruntimeconfig.cache
 /home/max/dev/game-backend/matchmaking-service/obj/Debug/net10.0/ref/matchmaking-service.dll
+/home/max/dev/game-backend/matchmaking-service/bin/Debug/net10.0/Pipelines.Sockets.Unofficial.dll
+/home/max/dev/game-backend/matchmaking-service/bin/Debug/net10.0/StackExchange.Redis.dll
+/home/max/dev/game-backend/matchmaking-service/bin/Debug/net10.0/System.IO.Hashing.dll

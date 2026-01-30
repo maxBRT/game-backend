@@ -23,14 +23,17 @@ public class QueueManager(
         return match;
     }
 
-
-    public List<Player>? GetSurvivors()
+    public async Task<Match?> TryCreateMatch()
     {
         lock (_lock)
         {
             if (survivorQueueService.Count() < 4) return null;
-            var survivors = new List<Player>();
+            if (killerQueueService.Count() < 1) return null;
 
+            var killer = killerQueueService.TryDequeue();
+            if (killer == null) return null;
+
+            var survivors = new List<Player>();
             for (int i = 0; i < 4; i++)
             {
                 var s = survivorQueueService.TryDequeue();
@@ -38,20 +41,9 @@ public class QueueManager(
                 survivors.Add(s);
             }
 
-            return survivors;
+            var match = new Match(Guid.NewGuid().ToString(), survivors, killer);
+            matchStore.AddMatch(match).GetAwaiter().GetResult();
+            return match;
         }
-    }
-
-    public Player? GetKiller()
-    {
-        lock (_lock)
-        {
-            return killerQueueService.TryDequeue();
-        }
-    }
-
-    public async Task CreateMatch(Match match)
-    {
-        await matchStore.AddMatch(match);
     }
 }

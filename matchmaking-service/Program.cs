@@ -1,4 +1,5 @@
 using Scalar.AspNetCore;
+using StackExchange.Redis;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -6,10 +7,20 @@ var builder = WebApplication.CreateBuilder(args);
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi();
 
-builder.Services.AddKeyedSingleton<IQueueService, InMemoryQueueService>("survivor");
-builder.Services.AddKeyedSingleton<IQueueService, InMemoryQueueService>("killer");
+
 builder.Services.AddSingleton<IQueueManager, QueueManager>();
 builder.Services.AddSingleton<IMatchStore, InMemoryMatchStore>();
+
+var multiplexer = ConnectionMultiplexer.Connect("localhost:6379,allowAdmin=true");
+
+// Hard reset the database
+var endPoints = multiplexer.GetEndPoints();
+var server = multiplexer.GetServer(endPoints[0]);
+server.FlushAllDatabases();
+
+builder.Services.AddSingleton<IConnectionMultiplexer>(multiplexer);
+builder.Services.AddKeyedSingleton<IQueueService, RedisQueueService>("survivor");
+builder.Services.AddKeyedSingleton<IQueueService, RedisQueueService>("killer");
 builder.Services.AddHostedService<MatcherWorker>();
 builder.Services.AddControllers();
 
