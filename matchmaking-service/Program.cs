@@ -11,7 +11,7 @@ builder.Services.AddOpenApi();
 builder.Services.AddSingleton<IQueueManager, QueueManager>();
 builder.Services.AddSingleton<IMatchStore, RedisMatchStore>();
 
-var multiplexer = ConnectionMultiplexer.Connect("localhost:6379,allowAdmin=true");
+var multiplexer = ConnectionMultiplexer.Connect("redis:6379,allowAdmin=true");
 
 // Hard reset the database
 var endPoints = multiplexer.GetEndPoints();

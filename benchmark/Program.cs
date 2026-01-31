@@ -24,9 +24,9 @@ rootCommand.Options.Add(purchaseOption);
 ParseResult parsedResult = rootCommand.Parse(args);
 
 var config = new BenchmarkConfig(
-        parsedResult.GetValue(survivorOption) > 0 ? parsedResult.GetValue(survivorOption) : 100,
-        parsedResult.GetValue(killerOption) > 0 ? parsedResult.GetValue(killerOption) : 20,
-        parsedResult.GetValue(purchaseOption) > 0 ? parsedResult.GetValue(purchaseOption) : 50
+        parsedResult.GetValue(survivorOption) > 0 ? parsedResult.GetValue(survivorOption) : 800,
+        parsedResult.GetValue(killerOption) > 0 ? parsedResult.GetValue(killerOption) : 200,
+        parsedResult.GetValue(purchaseOption) > 0 ? parsedResult.GetValue(purchaseOption) : 500
         );
 
 using IHost host = Host.CreateDefaultBuilder(args)

@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("player-service")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+52191fd4e30194371c0b16664e2d4f84efbdb66f")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+d2a8030141225966900e804ab3d904dc3f0234d8")]
 [assembly: System.Reflection.AssemblyProductAttribute("player-service")]
 [assembly: System.Reflection.AssemblyTitleAttribute("player-service")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

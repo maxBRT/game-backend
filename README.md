@@ -2,7 +2,7 @@
 
 A microservices backend for an asymmetrical multiplayer game (ex: Dead By Daylight). Built with .NET 10 and ASP.NET Core.
 
-The goal of this project is to demonstrate my understanding of the different layers of a live service and how they interact with each other.
+The goal of this project is to demonstrate my understanding of the different layers of a live service game backend and how they interact with each other.
 
 ## Services
 
@@ -10,6 +10,7 @@ The goal of this project is to demonstrate my understanding of the different lay
 |---------|------|-------------|
 | **player-service** | 5043 | Player profiles, inventory, and store |
 | **matchmaking-service** | 8000 | Queues players and creates matches |
+| **redis** | 6379 | Queues and stores match data |
 | **benchmark** | - | Load testing CLI tool |
 
 ## Quick Start
@@ -17,22 +18,10 @@ The goal of this project is to demonstrate my understanding of the different lay
 ### Using Docker Compose (Recommended)
 
 ```bash
-docker-compose up
+docker-compose up -d
 ```
 
 This starts both services with health checks and persistent storage.
-
-### Manual Run
-
-```bash
-# Terminal 1 - Player Service
-cd player-service
-dotnet run
-
-# Terminal 2 - Matchmaking Service
-cd matchmaking-service
-dotnet run
-```
 
 ## API Endpoints
 

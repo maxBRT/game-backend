@@ -1,4 +1,12 @@
 services:
+  redis:
+    image: redis:7-alpine # Use a lightweight, stable image
+    container_name: redis
+    restart: unless-stopped
+    ports:
+      - "6379:6379" # Map port 6379 on the host to the container
+    command: redis-server  
+
   player-service:
     build:
       context: ./player-service
