@@ -12,7 +12,8 @@ public class AppDbContext : DbContext
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
-        optionsBuilder.UseSqlite("Data Source=player-service.db");
+        var connectionString = Environment.GetEnvironmentVariable("CONNECTION_STRING");
+        optionsBuilder.UseNpgsql(connectionString);
     }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -34,20 +35,6 @@ public class AppDbContext : DbContext
             .WithMany(i => i.Inventories)
             .HasForeignKey(i => i.ItemId);
 
-        // Seed data
-        modelBuilder.Entity<Player>().HasData(
-            new Player { Id = 1, Username = "Max", Level = 1, Experience = 0, Currency = 100 },
-            new Player { Id = 2, Username = "John", Level = 1, Experience = 0, Currency = 100 },
-            new Player { Id = 3, Username = "Jane", Level = 1, Experience = 0, Currency = 100 },
-            new Player { Id = 4, Username = "Bob", Level = 1, Experience = 0, Currency = 100 },
-            new Player { Id = 5, Username = "Alice", Level = 1, Experience = 0, Currency = 100 }
-        );
-
-        modelBuilder.Entity<Item>().HasData(
-            new Item { Id = 1, Name = "Sword", Price = 20 },
-            new Item { Id = 2, Name = "Boots", Price = 5 },
-            new Item { Id = 3, Name = "Shield", Price = 10 }
-        );
     }
 }
 

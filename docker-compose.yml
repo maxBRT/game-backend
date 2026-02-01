@@ -1,20 +1,41 @@
 services:
   redis:
-    image: redis:7-alpine # Use a lightweight, stable image
+    image: redis 
     container_name: redis
     restart: unless-stopped
     ports:
-      - "6379:6379" # Map port 6379 on the host to the container
-    command: redis-server  
+      - "6379:6379" 
+    command: redis-server 
+
+  player-db:
+    image: postgres
+    container_name: player-db
+    restart: unless-stopped
+    environment:
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_USER: postgres
+      POSTGRES_DB: postgres
+    ports:
+      - "5432:5432"
+    volumes:
+      - ./postgres-data:/var/lib/postgresql
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
 
   player-service:
     build:
       context: ./player-service
       dockerfile: Dockerfile
+    depends_on:
+      player-db:
+        condition: service_healthy
     ports:
       - "5043:5043"
-    volumes:
-      - player-data:/app/data
+    environment:
+      CONNECTION_STRING: Host=player-db;Port=5432;Database=postgres;Username=postgres;Password=postgres
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:5043/players/1"]
       interval: 10s
