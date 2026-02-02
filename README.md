@@ -55,8 +55,8 @@ dotnet run
 
 **Options:**
 ```
--s <count>  Number of survivors (default: 100)
--k <count>  Number of killers (default: 20)
+-s <count>  Number of survivors (default: 800)
+-k <count>  Number of killers (default: 200)
 ```
 
 **Example:**
