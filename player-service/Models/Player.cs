@@ -9,5 +9,4 @@ public class Player
     public int Experience { get; set; }
     public int Currency { get; set; }
 
-    public ICollection<Inventory>? Inventories { get; set; }
 }

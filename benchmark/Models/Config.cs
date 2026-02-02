@@ -1,1 +1,4 @@
-public record BenchmarkConfig(int SurvivorCount, int KillerCount, int PurchaseCount);
+public record BenchmarkConfig(
+        int SurvivorCount,
+        int KillerCount
+    );

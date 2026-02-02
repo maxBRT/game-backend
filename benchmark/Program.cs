@@ -20,13 +20,11 @@ Option<int> purchaseOption = new("-b")
 var rootCommand = new RootCommand("Game Backend Benchmark");
 rootCommand.Options.Add(survivorOption);
 rootCommand.Options.Add(killerOption);
-rootCommand.Options.Add(purchaseOption);
 ParseResult parsedResult = rootCommand.Parse(args);
 
 var config = new BenchmarkConfig(
         parsedResult.GetValue(survivorOption) > 0 ? parsedResult.GetValue(survivorOption) : 800,
-        parsedResult.GetValue(killerOption) > 0 ? parsedResult.GetValue(killerOption) : 200,
-        parsedResult.GetValue(purchaseOption) > 0 ? parsedResult.GetValue(purchaseOption) : 500
+        parsedResult.GetValue(killerOption) > 0 ? parsedResult.GetValue(killerOption) : 200
         );
 
 using IHost host = Host.CreateDefaultBuilder(args)
@@ -34,11 +32,6 @@ using IHost host = Host.CreateDefaultBuilder(args)
     {
         services.AddSingleton<MetricsService>();
         services.AddHttpClient<IPlayerClient, PlayerClient>(client =>
-        {
-            client.BaseAddress = new Uri("http://localhost:5043");
-            client.DefaultRequestHeaders.Add("Accept", "application/json");
-        });
-        services.AddHttpClient<IPurchaseClient, PurchaseClient>(client =>
         {
             client.BaseAddress = new Uri("http://localhost:5043");
             client.DefaultRequestHeaders.Add("Accept", "application/json");
