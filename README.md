@@ -4,11 +4,16 @@ A microservices backend for an asymmetrical multiplayer game (ex: Dead By Daylig
 
 The goal of this project is to demonstrate my understanding of the different layers of a live service game backend and how they interact with each other.
 
+While this project is simple in terms of features, I put a lot of focus on making the architecture as modular as possible to showcase my ability to design and architect a service-oriented architecture.
+
+The porject is fully containerized and uses Docker Compose to run the services.
+
 ## Services
 
 | Service | Port | Description |
 |---------|------|-------------|
-| **player-service** | 5043 | Player profiles, inventory, and store |
+| **player-service** | 5043 | Player profiles |
+| **player-database** | 5432 | Postgres database for player profiles |
 | **matchmaking-service** | 8000 | Queues players and creates matches |
 | **redis** | 6379 | Queues and stores match data |
 | **benchmark** | - | Load testing CLI tool |
@@ -31,7 +36,6 @@ Documentation for the API endpoints can be viewed at `/scalar/v1` for each servi
 
 ```
 GET  /players/{id}     - Get player profile
-POST /store/buy        - Purchase an item
 ```
 
 ### Matchmaking Service (localhost:8000)
@@ -53,12 +57,11 @@ dotnet run
 ```
 -s <count>  Number of survivors (default: 100)
 -k <count>  Number of killers (default: 20)
--b <count>  Number of purchases (default: 50)
 ```
 
 **Example:**
 ```bash
-dotnet run -s 10000 -k 2500 -b 100
+dotnet run -s 10000 -k 2500 
 ```
 
 ## How Matchmaking Works
