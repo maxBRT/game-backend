@@ -6,7 +6,9 @@ The goal of this project is to demonstrate my understanding of the different lay
 
 While this project is simple in terms of features, I put a lot of focus on making the architecture as modular as possible to showcase my ability to design and architect a service-oriented architecture.
 
-The porject is fully containerized and uses Docker Compose to run the services.
+- The code has an automated test suite.
+- The queue is built in a way that redis could be swap for anything with minimal overhead
+- The application is fully containerized and all the services can be launched with a single command.
 
 ## Services
 
