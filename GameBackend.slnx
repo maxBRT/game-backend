@@ -1,0 +1,14 @@
+<Solution>
+  <Folder Name="/src/" />
+  <Folder Name="/src/Services/" />
+  <Folder Name="/src/Services/MatchMakingService/">
+    <Project Path="src/Services/MatchMakingService/matchmaking-service.csproj" />
+  </Folder>
+  <Folder Name="/src/Services/PlayerService/">
+    <Project Path="src/Services/PlayerService/player-service.csproj" />
+  </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/MatchMakingService.Tests/MatchMakingService.Tests.csproj" />
+    <Project Path="tests/PlayerService.Tests/PlayerService.Tests.csproj" />
+  </Folder>
+</Solution>

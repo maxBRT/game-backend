@@ -22,10 +22,10 @@ While this project is simple in terms of features, I put a lot of focus on makin
 
 ## Quick Start
 
-### Using Docker Compose (Recommended)
+### Using Docker Compose
 
 ```bash
-docker-compose up -d
+docker-compose up -d --build
 ```
 
 This starts both services with health checks and persistent storage.
